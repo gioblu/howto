@@ -2,6 +2,10 @@
 
 Tired of context-switching out of your terminal? `howto` brings an expert directly into your shell, just ask in natural language and let your favorite LLM provider work its magic. You can now forget about `man` and `--help`.
 
+Built to leverage local LLMs, reduce cloud provider expenses, and eliminate friction when working in a terminal. 
+
+With `howto` you can save successful prompts and responses as aliases to reuse them in future, avoiding inference and latency.
+
 ## Features
 
 - `howto config <host:port>`: configure the API provider
