@@ -1,7 +1,6 @@
 # howto
 
-Your LLM-powered terminal harness. Because Stack Overflow is for quitters.
-Tired of context-switching out of your terminal? `howto` brings an expert directly into your shell, just ask in natural language and let your favorite LLM provider work its magic. You can now forget about `man` pages and `--help` outputs.
+Tired of context-switching out of your terminal? `howto` brings an expert directly into your shell, just ask in natural language and let your favorite LLM provider work its magic. You can now forget about `man` and `--help`.
 
 ## Features
 
