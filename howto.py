@@ -14,6 +14,7 @@ import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
+import textwrap
 
 try:
     import readline
@@ -37,24 +38,30 @@ RESERVED_KEYWORDS = {
 PREPROMPT_FILE = Path(__file__).resolve().parent / "PREPROMPT.md"
 PREPROMPT = PREPROMPT_FILE.read_text(encoding="utf-8")
 
+from pathlib import Path
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def preprompt_with_cwd(cwd: Path | None = None) -> str:
     cwd = cwd or Path.cwd()
-    return f"{PREPROMPT}\nYou are now in the directory {cwd}\n"
+    now = datetime.now(ZoneInfo("UTC"))
+    current_time = now.strftime("%H:%M:%S")
+    current_date = now.strftime("%A, %B %d, %Y")
+    current_timezone = now.strftime("%Z")
+    
+    return f"{PREPROMPT}\nYou are now in the directory {cwd}\nIt is now {current_time} {current_date} {current_timezone}"
 
 # Output formatting
 PREFIX = " "
 RED = "\033[31m"
-GREEN = "\033[32m"
+GREEN = "\033[30;100m"
 RESET = "\033[0m"
 SPINNER_PHASES = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"]
 
 HELP_BANNER = r"""
  _   _  _____  _ _ _  _____  _____  
-| | | ||  _  || | | ||_   _||  _  | 
-| |_| || | | || | | |  | |  | | | | 
-|  _  || | | || | | |  | |  | | | | 
-| | | || |_| || | | |  | |  | |_| |  
+| |_| ||  _  || | | ||_   _||  _  | 
+|  _  || |_| || | | |  | |  | |_| | 
 |_| |_||_____||_____|  |_|  |_____| 
 
 An expert in your terminal - Giovanni Blu Mitolo 2026
@@ -132,7 +139,23 @@ def output_error(message: str) -> None:
     print(file=sys.stderr)
 
 def output_suggestion(message: str) -> None:
-    print(PREFIX + GREEN + message + RESET)
+    max_width = 60
+    text_width = max_width - 4  # "| " + text + " |"
+    
+    # Wrap text to fit
+    wrapped = textwrap.fill(message, width=text_width)
+    lines = wrapped.split('\n')
+    
+    # Top border
+    print("┌" + "─" * (max_width - 2) + "┐")
+    
+    # Content lines with 1-space padding
+    for line in lines:
+        padding = text_width - len(line)
+        print(f"│ {line}{' ' * padding} │")
+    
+    # Bottom border
+    print("└" + "─" * (max_width - 2) + "┘")
 
 
 def print_help() -> None:
@@ -223,7 +246,7 @@ def post_prompt(provider: str, model: str, prompt: str,
                 headers={"Content-Type": "application/json"},
                 method="POST",
             )
-            data = json.load(urllib.request.urlopen(req, timeout=60))
+            data = json.load(urllib.request.urlopen(req, timeout=90))
     except urllib.error.URLError as e:
         raise HowtoError(f"Failed to contact provider: {e}")
     if not isinstance(data, dict):
@@ -501,7 +524,7 @@ def repl_loop() -> None:
     print(msg + "\n")
     while True:
         try:
-            v = input("howto> ").strip()
+            v = input("\nhowto> ").strip()
         except (EOFError, KeyboardInterrupt):
             output()
             break
