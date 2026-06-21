@@ -1,6 +1,10 @@
 # howto
 
-Using `howto` you always have an expert available in your terminal. Need help in the terminal? Just ask in natural language! `howto` will help you using your favorite LLM provider.
+Tired of context-switching out of your terminal? `howto` brings an expert directly into your shell, just ask in natural language and let your favorite LLM provider work its magic. You can now forget about `man` and `--help`.
+
+Built to leverage local LLMs, reduce cloud provider expenses, and eliminate friction when working in a terminal. 
+
+With `howto` you can save successful prompts and responses as aliases to reuse them in future, avoiding inference and latency.
 
 ## Features
 
